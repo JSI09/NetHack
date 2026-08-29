@@ -707,9 +707,11 @@ extern char *x_monnam(struct monst *, int, const char *, int, boolean) NONNULLAR
 extern char *l_monnam(struct monst *) NONNULLARG1;
 extern char *mon_nam(struct monst *) NONNULLARG1;
 extern char *noit_mon_nam(struct monst *) NONNULLARG1;
+extern char *noit_or_your_mon_nam(struct monst *) NONNULLARG1;
 extern char *some_mon_nam(struct monst *) NONNULLARG1;
 extern char *Monnam(struct monst *) NONNULLARG1;
 extern char *noit_Monnam(struct monst *) NONNULLARG1;
+extern char *noit_or_your_Monnam(struct monst *) NONNULLARG1;
 extern char *Some_Monnam(struct monst *) NONNULLARG1;
 extern char *noname_monnam(struct monst *, int) NONNULLARG1;
 extern char *m_monnam(struct monst *) NONNULLARG1;
@@ -949,6 +951,7 @@ extern void early_options(int *argc_p, char ***argv_p, char **hackdir_p);
 #ifdef WIN32
 int windows_early_options(const char *);
 #endif
+extern void genl_prag(int, char **); /* profession, race, align, gender */
 
 /* ### eat.c ### */
 
@@ -1866,6 +1869,9 @@ extern void see_monster_closeup(struct monst *, boolean) NONNULLARG1;
 extern void see_nearby_monsters(void);
 extern void shieldeff_mon(struct monst *) NONNULLARG1;
 extern void flash_mon(struct monst *) NONNULLARG1;
+extern boolean maybe_set_terrain_effects(struct monst *,
+                                         struct permonst *) NONNULLARG1;
+extern void terrain_effects(void);
 
 /* ### mondata.c ### */
 
@@ -1985,9 +1991,6 @@ extern void mplayer_talk(struct monst *) NONNULLARG1;
 
 #ifndef WIN32
 extern int tgetch(void);
-#endif
-#ifndef TOS
-extern char switchar(void);
 #endif
 #ifndef __GO32__
 extern long freediskspace(char *);
@@ -2424,6 +2427,9 @@ extern void gettty(void);
 extern void settty(const char *);
 extern void setftty(void);
 ATTRNORETURN extern void error(const char *, ...) PRINTF_F(1, 2) NORETURN;
+#ifdef ENHANCED_SYMBOLS
+extern void tty_utf8graphics_fixup(void);
+#endif
 #if defined(TIMED_DELAY) && defined(_MSC_VER)
 extern void msleep(unsigned);
 #endif
@@ -2755,7 +2761,7 @@ void restore_gamelog(NHFILE *);
 boolean restgamestate(NHFILE *);
 void restore_msghistory(NHFILE *);
 #endif
-extern void rest_adjust_levelflags(void);
+extern void rest_adjust_levelflags(long);
 extern void moves_to_relative_time(long *);
 extern void relative_time_to_moves(long *);
 extern boolean revision_increment(int, int, uchar *);
